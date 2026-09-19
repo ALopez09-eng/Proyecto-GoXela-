@@ -54,13 +54,22 @@ namespace Proyecto_Go_Xela
 
         public IDictionary<PackageType,int> GetCantidadPaquetesPorTipo()
         {
-            return InMemoryStore.GetPaquetes().GroupBy(p => p.Tipo).ToDictionary(g => g.Key, g => g.Count());
+
+            var paquetes = InMemoryStore.GetPaquetes();
+            var resultado = new Dictionary<PackageType, int>();
+            foreach (PackageType tipo in Enum.GetValues(typeof(PackageType)))
+            {
+                var cantidad = RecursionExamples.ContarPaquetesPorTipoRecursivo(paquetes, tipo);
+                if (cantidad > 0) resultado[tipo] = cantidad;
+            }
+            return resultado;
         }
 
         public double GetTotalIngresos()
         {
-            // Total de entregas finalizadas
-            return InMemoryStore.GetEntregas().Where(e => e.Estado == DeliveryStatus.Entregada).Sum(e => e.Total);
+
+            var entregasFinalizadas = InMemoryStore.GetEntregas().Where(e => e.Estado == DeliveryStatus.Entregada).ToList();
+            return RecursionExamples.SumarIngresosRecursivo(entregasFinalizadas);
         }
 
         public Entrega GetEntregaConMayorCosto()

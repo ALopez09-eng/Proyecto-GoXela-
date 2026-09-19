@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Proyecto_Go_Xela
 {
-    // EXCEPCIONES PERSONALIZADAS
+
     public class ValidationException : Exception
     {
         public ValidationException(string message) : base(message) { }
@@ -15,16 +15,20 @@ namespace Proyecto_Go_Xela
         public DuplicateCodeException(string message) : base(message) { }
     }
 
-    // USO DE ESTRUCTURAS
+
     public struct Address
     {
         public string Street { get; set; }
         public string City { get; set; }
 
-        public override string ToString() => string.IsNullOrWhiteSpace(Street) ? City : $"{Street}, {City}";
+        public override string ToString()
+        {
+            if (string.IsNullOrWhiteSpace(Street)) return City ?? "";
+            if (string.IsNullOrWhiteSpace(City)) return Street;
+            return $"{Street}, {City}";
+        }
     }
 
-    // ENCAPSULAMIENTO
     public class SecureClient
     {
         private string _name;
@@ -61,7 +65,7 @@ namespace Proyecto_Go_Xela
         }
     }
 
-    // HERENCIA, POLIMORFISMO, SOBRESCRITURA
+
     public abstract class Notification
     {
         public string To { get; set; }
@@ -71,7 +75,7 @@ namespace Proyecto_Go_Xela
             To = to; Message = message;
         }
 
-        public abstract void Send(); // sobrescritura obligatoria
+        public abstract void Send();
     }
 
     public class EmailNotification : Notification
@@ -84,7 +88,7 @@ namespace Proyecto_Go_Xela
 
         public override void Send()
         {
-            // implementación simulada
+
             Console.WriteLine($"Enviando email a {To} - {Subject}: {Message}");
         }
     }
@@ -98,24 +102,24 @@ namespace Proyecto_Go_Xela
         }
     }
 
-    // SOBRECARGA
+
     public static class TariffCalculatorEx
     {
-        // sobrecarga 1: sólo distancia
+
         public static double Calculate(double distanceKm)
         {
             return Math.Round(1.2 * Math.Max(0, distanceKm), 2);
         }
 
-        // sobrecarga 2: distancia + peso
+
         public static double Calculate(double distanceKm, double weightKg)
         {
             var baseFare = Calculate(distanceKm);
-            if (weightKg > 10) baseFare += baseFare * 0.1; // recargo por peso
+            if (weightKg > 10) baseFare += baseFare * 0.1; 
             return Math.Round(baseFare, 2);
         }
 
-        // sobrecarga 3: distancia + tipo de servicio
+
         public static double Calculate(double distanceKm, ServiceType service)
         {
             var fare = Calculate(distanceKm);
@@ -125,19 +129,35 @@ namespace Proyecto_Go_Xela
         }
     }
 
-    // RECURSIVIDAD (ejemplo simple)
     public static class RecursionExamples
     {
-        // factorial recursivo (ejemplo didáctico)
+
         public static long Factorial(int n)
         {
             if (n < 0) throw new ArgumentException("n negativo");
             if (n == 0 || n == 1) return 1;
             return n * Factorial(n - 1);
         }
+
+
+        public static double SumarIngresosRecursivo(List<Entrega> entregas, int index = 0)
+        {
+            if (entregas == null || index >= entregas.Count)
+                return 0.0; 
+
+            return entregas[index].Total + SumarIngresosRecursivo(entregas, index + 1);
+        }
+
+        public static int ContarPaquetesPorTipoRecursivo(List<Paquete> paquetes, PackageType tipo, int index = 0)
+        {
+            if (paquetes == null || index >= paquetes.Count)
+                return 0; 
+
+            int actual = paquetes[index].Tipo == tipo ? 1 : 0;
+            return actual + ContarPaquetesPorTipoRecursivo(paquetes, tipo, index + 1);
+        }
     }
 
-    // USO BASICO DE "PUNTEROS" con IntPtr/Marshal (evita unsafe)
     public static class MemoryHelper
     {
         public static IntPtr AllocateInt(int value)

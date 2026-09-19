@@ -13,8 +13,7 @@ namespace Proyecto_Go_Xela
 {
     public partial class GestionClientes : Form
     {
-        // Guarda el Id del cliente seleccionado en el ListView para edición.
-        // -1 significa que no hay ningún cliente en edición (modo "Registrar").
+
         private int _idClienteEnEdicion = -1;
 
         public GestionClientes()
@@ -24,28 +23,27 @@ namespace Proyecto_Go_Xela
 
         private void GestionClientes_Load(object sender, EventArgs e)
         {
-            // Asociar evento al botón registrar
+
             RegistrarCliente.Click += RegistrarCliente_Click;
 
-            // Asociar evento al botón cancelar (limpiar formulario)
+
             CancelarRegistroCliente.Click += CancelarRegistroCliente_Click;
 
-            // Asociar evento al botón actualizar
+
             ActualizarCliente.Click += ActualizarCliente_Click;
 
-            // Al iniciar no hay ningún cliente seleccionado, así que Actualizar
-            // permanece deshabilitado hasta que se seleccione algo en el ListView.
+
             ActualizarCliente.Enabled = false;
 
-            // Cargar clientes existentes
+
             foreach (var c in InMemoryStore.GetClientes())
             {
                 var item = new ListViewItem(c.Id.ToString());
                 item.SubItems.Add(c.Nombre);
                 item.SubItems.Add(c.Telefono);
-                item.SubItems.Add("");
-                item.SubItems.Add("");
-                item.SubItems.Add("0");
+                item.SubItems.Add(c.CorreoElectronico ?? "");
+                item.SubItems.Add(c.Direccion.ToString());
+                item.SubItems.Add(c.CantidadSolicitudes.ToString());
                 listView1.Items.Add(item);
             }
         }
@@ -59,7 +57,6 @@ namespace Proyecto_Go_Xela
                 string correo = CorreoElectronicoCliente.Text?.Trim();
                 string direccion = DireccionClinete.Text?.Trim();
 
-                // 3) Validar que todos los campos estén completos
                 if (string.IsNullOrEmpty(nombre) ||
                     string.IsNullOrEmpty(telefono) ||
                     string.IsNullOrEmpty(correo) ||
@@ -70,7 +67,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 1) Validar teléfono: solo dígitos, máximo 8, sin negativos
                 if (!Regex.IsMatch(telefono, @"^\d{1,8}$"))
                 {
                     MessageBox.Show("El número de teléfono debe contener solo dígitos, sin signos negativos, y no puede exceder 8 dígitos.",
@@ -79,7 +75,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 2) Validar correo: al menos un '@'
                 if (!correo.Contains("@"))
                 {
                     MessageBox.Show("El correo electrónico debe contener al menos un símbolo '@'.",
@@ -88,27 +83,37 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
+                try
+                {
+                    var _ = new SecureClient(0, nombre, telefono);
+                }
+                catch (ValidationException vex)
+                {
+                    MessageBox.Show(vex.Message, "Datos inválidos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 var c = new Cliente
                 {
                     Nombre = nombre,
                     Telefono = telefono,
                     EsPreferente = false,
+                    CorreoElectronico = correo,
+                    Direccion = new Address { Street = direccion },
                 };
                 c = InMemoryStore.AddCliente(c);
 
-                // 4) Mostrar el nuevo cliente en el ListView
                 var item = new ListViewItem(c.Id.ToString());
                 item.SubItems.Add(c.Nombre);
                 item.SubItems.Add(c.Telefono);
                 item.SubItems.Add(correo);
                 item.SubItems.Add(direccion);
-                item.SubItems.Add("0");
+                item.SubItems.Add(c.CantidadSolicitudes.ToString());
                 listView1.Items.Add(item);
 
                 MessageBox.Show("Cliente registrado correctamente.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // 5) Limpiar el formulario para poder registrar otro cliente
                 LimpiarCampos();
             }
             catch (Exception ex)
@@ -117,7 +122,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // Método reutilizado por el botón Cancelar y tras un registro exitoso
         private void LimpiarCampos()
         {
             NombreCliente.Clear();
@@ -131,7 +135,6 @@ namespace Proyecto_Go_Xela
         {
             LimpiarCampos();
 
-            // Salir del modo edición y volver al modo "Registrar"
             _idClienteEnEdicion = -1;
             listView1.SelectedIndices.Clear();
             RegistrarCliente.Enabled = true;
@@ -154,7 +157,6 @@ namespace Proyecto_Go_Xela
                 string correo = CorreoElectronicoCliente.Text?.Trim();
                 string direccion = DireccionClinete.Text?.Trim();
 
-                // Mismas validaciones que al registrar
                 if (string.IsNullOrEmpty(nombre) ||
                     string.IsNullOrEmpty(telefono) ||
                     string.IsNullOrEmpty(correo) ||
@@ -181,15 +183,15 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // Actualizar el cliente en el almacenamiento en memoria
                 var cliente = InMemoryStore.GetClientes().FirstOrDefault(c => c.Id == _idClienteEnEdicion);
                 if (cliente != null)
                 {
                     cliente.Nombre = nombre;
                     cliente.Telefono = telefono;
+                    cliente.CorreoElectronico = correo;
+                    cliente.Direccion = new Address { Street = direccion };
                 }
 
-                // Actualizar la fila correspondiente en el ListView
                 foreach (ListViewItem item in listView1.Items)
                 {
                     if (item.Text == _idClienteEnEdicion.ToString())
@@ -205,7 +207,6 @@ namespace Proyecto_Go_Xela
                 MessageBox.Show("Cliente actualizado correctamente.", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Volver al modo "Registrar"
                 LimpiarCampos();
                 _idClienteEnEdicion = -1;
                 listView1.SelectedIndices.Clear();
@@ -260,19 +261,16 @@ namespace Proyecto_Go_Xela
 
             var item = listView1.SelectedItems[0];
 
-            // Guardar el Id del cliente seleccionado para saber cuál actualizar después
             if (int.TryParse(item.Text, out int id))
             {
                 _idClienteEnEdicion = id;
             }
 
-            // Cargar los datos del cliente seleccionado dentro del GroupBox
             NombreCliente.Text = item.SubItems.Count > 1 ? item.SubItems[1].Text : "";
             NumeroTelefonoCliente.Text = item.SubItems.Count > 2 ? item.SubItems[2].Text : "";
             CorreoElectronicoCliente.Text = item.SubItems.Count > 3 ? item.SubItems[3].Text : "";
             DireccionClinete.Text = item.SubItems.Count > 4 ? item.SubItems[4].Text : "";
 
-            // Bloquear Registrar y habilitar Cancelar/Actualizar (modo edición)
             RegistrarCliente.Enabled = false;
             ActualizarCliente.Enabled = true;
         }

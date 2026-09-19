@@ -34,6 +34,14 @@ namespace Proyecto_Go_Xela
             {
                 var sb = new StringBuilder();
 
+
+                IntPtr ptrCodigoReporte = MemoryHelper.AllocateInt(DateTime.Now.Second + DateTime.Now.Millisecond);
+                int codigoReporte = MemoryHelper.ReadInt(ptrCodigoReporte);
+                MemoryHelper.Free(ptrCodigoReporte);
+                sb.AppendLine($"Código de generación de reporte: {codigoReporte}");
+                sb.AppendLine($"Generado: {DateTime.Now:g}");
+                sb.AppendLine();
+
                 var activas = _reports.GetEntregasActivas();
                 sb.AppendLine($"1. Entregas activas: {activas.Count()}");
 

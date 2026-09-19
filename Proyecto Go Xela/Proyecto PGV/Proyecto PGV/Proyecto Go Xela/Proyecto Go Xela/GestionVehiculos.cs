@@ -15,7 +15,6 @@ namespace Proyecto_Go_Xela
         private const string ESTADO_INICIAL = "DISPONIBLE";
         private const string PLACEHOLDER = "SELECCIONE UNA OPCIÓN";
 
-        // Id del vehículo seleccionado en el ListView para edición. -1 = modo "Registrar".
         private int _idVehiculoEnEdicion = -1;
 
         public GestionVehiculos()
@@ -25,16 +24,11 @@ namespace Proyecto_Go_Xela
 
         private void GestionVehiculos_Load(object sender, EventArgs e)
         {
-            // "registrarRepartidor" ya está conectado desde el Designer.
-            // "button1" (Cancelar) y "ActualizarRepartidor" (Actualizar) NO lo estaban, así que los conectamos aquí.
             button1.Click += button1_Click;
             ActualizarRepartidor.Click += ActualizarRepartidor_Click;
 
             ActualizarRepartidor.Enabled = false;
 
-            // Cargar vehículos existentes en el ListView.
-            // NOTA: Vehiculo solo guarda "Disponible" (bool), así que al recargar desde el
-            // almacenamiento solo podemos reconstruir 2 de los 3 estados posibles (ver aviso al final).
             foreach (var v in InMemoryStore.GetVehiculos())
             {
                 string estadoReconstruido = v.Disponible ? "DISPONIBLE" : "ASIGNADO";
@@ -44,9 +38,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // ---------- Helpers ----------
-
-        // Valida que la placa tenga EXACTAMENTE 3 letras y 3 números (ni más ni menos), sin otros caracteres.
         private bool ValidarPlaca(string placa)
         {
             if (string.IsNullOrEmpty(placa)) return false;
@@ -58,7 +49,6 @@ namespace Proyecto_Go_Xela
             return letras == 3 && numeros == 3 && otrosCaracteres == 0;
         }
 
-        // Columnas reales del ListView: Codigo, Tipo, Placa, Marca, Modelo, CapacidadMaxima, Estado, CostoOperativo
         private ListViewItem CrearItemVehiculo(int id, string tipo, string placa, string marca, string modelo,
             double capacidad, string estado, double costo)
         {
@@ -86,7 +76,6 @@ namespace Proyecto_Go_Xela
             MarcaVehiculo.Focus();
         }
 
-        // ---------- Eventos de controles ----------
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
@@ -108,7 +97,6 @@ namespace Proyecto_Go_Xela
 
         }
 
-        // 1) Si el tipo es "Bicicleta", bloquear la placa con "N/A"; en cualquier otro caso, habilitarla.
         private void TipoVehiculo_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool esBicicleta = (TipoVehiculo.Text ?? "").Trim().Equals("BICICLETA", StringComparison.OrdinalIgnoreCase);
@@ -120,7 +108,6 @@ namespace Proyecto_Go_Xela
             }
             else
             {
-                // Si venía bloqueada con "N/A", la limpiamos para que el usuario pueda escribir la real
                 if (!PlacaVehiculo.Enabled)
                 {
                     PlacaVehiculo.Text = "";
@@ -143,7 +130,6 @@ namespace Proyecto_Go_Xela
                 bool esBicicleta = !string.IsNullOrEmpty(tipoTexto) &&
                     tipoTexto.Equals("BICICLETA", StringComparison.OrdinalIgnoreCase);
 
-                // Todos los campos obligatorios
                 if (string.IsNullOrEmpty(tipoTexto) || tipoTexto.Equals(PLACEHOLDER, StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(placa) || string.IsNullOrEmpty(marca) || string.IsNullOrEmpty(modelo) ||
                     string.IsNullOrEmpty(capacidadTexto) || string.IsNullOrEmpty(costoTexto))
@@ -153,7 +139,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 2) Validar placa (no aplica si es Bicicleta, que siempre usa "N/A")
                 if (!esBicicleta && !ValidarPlaca(placa))
                 {
                     MessageBox.Show("La placa debe contener exactamente 3 números y 3 letras.",
@@ -162,7 +147,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 3) Capacidad y costo no negativos
                 if (!double.TryParse(capacidadTexto, out double capacidad) || capacidad < 0)
                 {
                     MessageBox.Show("La capacidad máxima debe ser un número válido y no puede ser negativa.",
@@ -186,7 +170,7 @@ namespace Proyecto_Go_Xela
                     Modelo = modelo,
                     Tipo = VehicleType.Carro,
                     CapacidadKg = capacidad,
-                    Disponible = true, // 6) Siempre inicia DISPONIBLE, sin importar el combo Estado
+                    Disponible = true, 
                     LicenciaRequerida = "",
                     CostoOperativo = costo
                 };
@@ -195,11 +179,9 @@ namespace Proyecto_Go_Xela
                 v = InMemoryStore.AddVehiculo(v);
                 MessageBox.Show($"Vehículo registrado. Id: {v.Id}", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // 4) Mostrar en el ListView. El estado SIEMPRE se guarda como "DISPONIBLE" en el registro.
                 LisViewVehiculos.Items.Add(CrearItemVehiculo(
                     v.Id, tipoTexto.ToUpper(), v.Placa, marca, modelo, capacidad, ESTADO_INICIAL, costo));
 
-                // 5) Limpiar el formulario para poder registrar otro vehículo
                 LimpiarCamposVehiculo();
             }
             catch (Exception ex)
@@ -208,7 +190,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // 5) Al seleccionar una fila, cargar sus datos en el GroupBox y pasar a modo edición
         private void LisViewVehiculos_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (LisViewVehiculos.SelectedItems.Count == 0)
@@ -221,8 +202,7 @@ namespace Proyecto_Go_Xela
 
             _idVehiculoEnEdicion = id;
 
-            // Tomamos los valores directamente de la fila (evita perder precisión al
-            // ir y venir del enum/estado, que en el modelo actual son más limitados que el UI).
+
             string tipoGuardado = item.SubItems[1].Text;
             string placaGuardada = item.SubItems[2].Text;
             string marcaGuardada = item.SubItems[3].Text;
@@ -236,10 +216,9 @@ namespace Proyecto_Go_Xela
             ModeloVehículo.Text = modeloGuardado;
             CapacidadMaximaVehiculo.Text = capacidadGuardada;
             CostoOperativoVehiuclo.Text = costoGuardado;
-            EstadoVehiculo.Text = estadoGuardado; // 6) En edición sí se puede ver/cambiar el estado
+            EstadoVehiculo.Text = estadoGuardado; 
 
-            // 1) Forzamos el estado correcto de la placa según el tipo real
-            // (al asignar Text por código, el combo no siempre dispara SelectedIndexChanged)
+
             bool esBicicleta = tipoGuardado.Trim().Equals("BICICLETA", StringComparison.OrdinalIgnoreCase);
             if (esBicicleta)
             {
@@ -252,7 +231,6 @@ namespace Proyecto_Go_Xela
                 PlacaVehiculo.Text = placaGuardada;
             }
 
-            // Bloquear Registrar y habilitar Cancelar/Actualizar (modo edición)
             registrarRepartidor.Enabled = false;
             ActualizarRepartidor.Enabled = true;
         }
@@ -277,7 +255,6 @@ namespace Proyecto_Go_Xela
 
         }
 
-        // Botón "CANCELAR" (control real: button1). Deja el GroupBox limpio y vuelve al modo "Registrar".
         private void button1_Click(object sender, EventArgs e)
         {
             LimpiarCamposVehiculo();
@@ -287,8 +264,6 @@ namespace Proyecto_Go_Xela
             ActualizarRepartidor.Enabled = false;
         }
 
-        // Botón "ACTUALIZAR" (control real: ActualizarRepartidor).
-        // Valida, actualiza el vehículo en InMemoryStore y refleja los cambios en el ListView.
         private void ActualizarRepartidor_Click(object sender, EventArgs e)
         {
             try
@@ -360,10 +335,8 @@ namespace Proyecto_Go_Xela
                 vehiculo.CostoOperativo = costo;
                 try { vehiculo.Tipo = (VehicleType)Enum.Parse(typeof(VehicleType), tipoTexto, true); } catch { }
 
-                // 6) En edición sí se permite cambiar el estado según lo seleccionado en el combo
                 vehiculo.Disponible = estadoTexto.Equals("DISPONIBLE", StringComparison.OrdinalIgnoreCase);
 
-                // Reflejar los cambios en la fila del ListView
                 foreach (ListViewItem item in LisViewVehiculos.Items)
                 {
                     if (item.Text == _idVehiculoEnEdicion.ToString())

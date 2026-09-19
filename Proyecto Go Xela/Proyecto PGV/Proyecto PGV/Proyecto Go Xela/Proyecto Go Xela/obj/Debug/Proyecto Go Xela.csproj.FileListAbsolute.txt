@@ -1,57 +1,31 @@
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionVehiculos.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionPaquetes.resources
-C:\Users\aleja\Desktop\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionEntregas.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionEntregas.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionPaquetes.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionVehiculos.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
-C:\Users\juand\OneDrive\Documents\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionEntregas.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionPaquetes.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionVehiculos.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
-C:\Users\aleja\Desktop\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionEntregas.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionPaquetes.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionVehiculos.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
+C:\Users\aleja\Desktop\Pruebita\Proyecto_Go_Xela\Proyecto Go Xela\Proyecto PGV\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe.config
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.exe
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\bin\Debug\Proyecto Go Xela.pdb
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.AssemblyReference.cache
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.DetalleEntrega.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionClientes.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionEntregas.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionPaquetes.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionRepartidores.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.GestionVehiculos.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Inicio.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto_Go_Xela.Properties.Resources.resources
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.GenerateResource.cache
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.csproj.CoreCompileInputs.cache
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.exe
+C:\Users\aleja\Desktop\Proyecto\Proyecto Go Xela\Proyecto PGV\Proyecto Go Xela\Proyecto Go Xela\obj\Debug\Proyecto Go Xela.pdb

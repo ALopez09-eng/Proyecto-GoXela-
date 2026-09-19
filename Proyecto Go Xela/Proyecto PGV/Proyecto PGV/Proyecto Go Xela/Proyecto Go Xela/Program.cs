@@ -11,7 +11,6 @@ namespace Proyecto_Go_Xela
     internal static class Program
     {
         /// <summary>
-        /// Punto de entrada principal para la aplicación.
         /// </summary>
         [STAThread]
         static void Main()
@@ -19,23 +18,23 @@ namespace Proyecto_Go_Xela
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Cargar datos persistentes
             InMemoryStore.Load();
 
-            // Guardar al salir
             Application.ApplicationExit += (s, e) => InMemoryStore.Save();
 
             Application.Run(new Inicio());
         }
     }
 
-    // Modelos simples para Clientes, Repartidores, Paquetes y Entregas
     public class Cliente
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public bool EsPreferente { get; set; }
+        public string CorreoElectronico { get; set; }
+        public Address Direccion { get; set; }
+        public int CantidadSolicitudes { get; set; }
     }
 
     public class Repartidor
@@ -43,10 +42,11 @@ namespace Proyecto_Go_Xela
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Telefono { get; set; }
-        // Disponibilidad para asignaciones
         public bool Disponible { get; set; }
-        // Licencias que posee (por ejemplo: "A", "B", "C")
         public List<string> Licencias { get; set; }
+        public string NumeroLicencia { get; set; }
+        public int CantidadEntregasRealizadas { get; set; }
+        public double CalificacionPromedio { get; set; }
     }
 
     public class Paquete
@@ -55,13 +55,10 @@ namespace Proyecto_Go_Xela
         public string Descripcion { get; set; }
         public double PesoKg { get; set; }
         public string Dimensiones { get; set; }
-        // Tipo de paquete (afecta compatibilidad con vehículo)
         public PackageType Tipo { get; set; }
-        // Direcciones y valor declarado opcionales
         public string DireccionOrigen { get; set; }
         public string DireccionDestino { get; set; }
         public double ValorDeclarado { get; set; }
-        // Estado libre de forma simple
         public string Estado { get; set; }
     }
 
@@ -82,9 +79,7 @@ namespace Proyecto_Go_Xela
         public VehicleType Tipo { get; set; }
         public double CapacidadKg { get; set; }
         public bool Disponible { get; set; }
-        // Licencia requerida para conducir este vehículo (por ejemplo "A", "B")
         public string LicenciaRequerida { get; set; }
-        // Costo operativo por unidad (almacenado como double)
         public double CostoOperativo { get; set; }
     }
 
@@ -102,7 +97,6 @@ namespace Proyecto_Go_Xela
         public Cliente Cliente { get; set; }
         public Repartidor Repartidor { get; set; }
         public Paquete Paquete { get; set; }
-        // Vehículo como texto (referencia simple a un vehículo registrado)
         public string Vehiculo { get; set; }
         public string Origen { get; set; }
         public string Destino { get; set; }
@@ -111,22 +105,18 @@ namespace Proyecto_Go_Xela
         public double Recargos { get; set; }
         public double Descuentos { get; set; }
         public double Total { get; set; }
-        // Fecha de solicitud (cuando el cliente pidió la entrega)
         public DateTime FechaSolicitud { get; set; }
 
-        // Fecha prevista / registrada de la ejecución/registro
         public DateTime Fecha { get; set; }
 
-        // Tipo de servicio solicitado
         public ServiceType TipoServicio { get; set; }
 
-        // Estado de la entrega
         public DeliveryStatus Estado { get; set; }
 
-        // Incidencias registradas durante la gestión de la entrega
         public List<Incidencia> Incidencias { get; set; }
-        // Historial de cambios de estado
         public List<StateChangeRecord> EstadoHistorial { get; set; }
+
+        public int? Calificacion { get; set; }
     }
 
     public enum IncidenciaTipo
@@ -149,7 +139,6 @@ namespace Proyecto_Go_Xela
 
     public class Incidencia
     {
-        // Código único por entrega (ej: "E123-1")
         public string Codigo { get; set; }
         public IncidenciaTipo Tipo { get; set; }
         public string Descripcion { get; set; }
@@ -188,7 +177,6 @@ namespace Proyecto_Go_Xela
 
     public static class DeliveryWorkflow
     {
-        // Devuelve transiciones válidas desde un estado dado
         public static List<DeliveryStatus> GetAllowedTransitions(DeliveryStatus from)
         {
             var list = new List<DeliveryStatus>();
@@ -228,7 +216,6 @@ namespace Proyecto_Go_Xela
                 case DeliveryStatus.Entregada:
                 case DeliveryStatus.Cancelada:
                 default:
-                    // estados terminales: no transiciones
                     break;
             }
             return list;
@@ -236,13 +223,12 @@ namespace Proyecto_Go_Xela
 
         public static bool IsValidTransition(DeliveryStatus from, DeliveryStatus to)
         {
-            if (from == to) return true; // permitir mantener mismo estado
+            if (from == to) return true; 
             var allowed = GetAllowedTransitions(from);
             return allowed.Contains(to);
         }
     }
 
-    // Almacenamiento en memoria (temporal)
     public static class InMemoryStore
     {
         private static int _clienteId = 1;
@@ -322,29 +308,25 @@ namespace Proyecto_Go_Xela
 
         public static Entrega AddEntrega(Entrega e)
         {
-            // validaciones
             if (e == null) throw new ValidationException("Entrega nula");
             if (e.Cliente == null) throw new ValidationException("Entrega debe tener un cliente");
             if (e.Paquete == null) throw new ValidationException("Entrega debe tener un paquete");
             if (e.DistanciaKm < 0) throw new ValidationException("Distancia no puede ser negativa");
 
             e.Id = _entregaId++;
-            // Fecha de registro
             e.Fecha = DateTime.Now;
-            // Si no se proporcionó fecha de solicitud, usar ahora
             if (e.FechaSolicitud == default(DateTime)) e.FechaSolicitud = DateTime.Now;
 
-            // Inicializar incidencias y estado si es nulo
+            e.Cliente.CantidadSolicitudes++;
+
             if (e.Incidencias == null) e.Incidencias = new List<Incidencia>();
             e.Estado = DeliveryStatus.Solicitada;
 
-            // Estimar distancia si no se proporcionó
             if (e.DistanciaKm <= 0)
             {
                 e.DistanciaKm = CostCalculator.EstimateDistanceKm(e.Origen, e.Destino);
             }
 
-            // Calcular tarifas (tiene en cuenta tipo de servicio)
             CostCalculator.ApplyCosts(e);
 
             Entregas.Add(e);
@@ -353,7 +335,6 @@ namespace Proyecto_Go_Xela
 
         public static List<Entrega> GetEntregas() => Entregas.ToList();
 
-        // Generar reporte CSV simple de entregas (devuelve ruta del archivo)
         public static string GenerateReportCsv()
         {
             try
@@ -386,8 +367,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // Intenta cambiar el estado de una entrega respetando las reglas de flujo.
-        // user: usuario que realiza el cambio (se registrará en el historial). Si es null, se usa Environment.UserName
         public static bool TryChangeEntregaState(int entregaId, DeliveryStatus newState, string user, out string message)
         {
             var e = Entregas.FirstOrDefault(x => x.Id == entregaId);
@@ -406,13 +385,27 @@ namespace Proyecto_Go_Xela
             var previous = e.Estado;
             e.Estado = newState;
 
-            // Si se reprograma, actualizar FechaSolicitud a ahora (o podría venir como parámetro)
             if (newState == DeliveryStatus.Reprogramada)
             {
                 e.FechaSolicitud = DateTime.Now;
             }
 
-            // Inicializar historial si es nulo
+
+            if (newState == DeliveryStatus.Entregada || newState == DeliveryStatus.Cancelada)
+            {
+                if (e.Repartidor != null) e.Repartidor.Disponible = true;
+
+                var vehiculoAsignado = Vehiculos.FirstOrDefault(v =>
+                        !string.IsNullOrWhiteSpace(v.Placa) && string.Equals(v.Placa, e.Vehiculo, StringComparison.OrdinalIgnoreCase))
+                    ?? Vehiculos.FirstOrDefault(v => string.Equals(v.Tipo.ToString(), e.Vehiculo, StringComparison.OrdinalIgnoreCase));
+                if (vehiculoAsignado != null) vehiculoAsignado.Disponible = true;
+            }
+
+            if (newState == DeliveryStatus.Entregada && e.Repartidor != null)
+            {
+                e.Repartidor.CantidadEntregasRealizadas++;
+            }
+
             if (e.EstadoHistorial == null) e.EstadoHistorial = new List<StateChangeRecord>();
 
             var usr = string.IsNullOrEmpty(user) ? Environment.UserName : user;
@@ -425,7 +418,6 @@ namespace Proyecto_Go_Xela
                 Note = null
             });
 
-            // Persistir cambios
             try { Save(); } catch { }
             message = null;
             return true;
@@ -435,6 +427,45 @@ namespace Proyecto_Go_Xela
         {
             return DeliveryWorkflow.GetAllowedTransitions(from);
         }
+
+        public static bool CalificarEntrega(int entregaId, int calificacion, out string message)
+        {
+            var e = Entregas.FirstOrDefault(x => x.Id == entregaId);
+            if (e == null)
+            {
+                message = "Entrega no encontrada.";
+                return false;
+            }
+
+            if (e.Estado != DeliveryStatus.Entregada)
+            {
+                message = "No se puede calificar una entrega que todavía no ha finalizado.";
+                return false;
+            }
+
+            if (calificacion < 1 || calificacion > 5)
+            {
+                message = "La calificación debe estar entre 1 y 5.";
+                return false;
+            }
+
+            e.Calificacion = calificacion;
+
+            if (e.Repartidor != null)
+            {
+                var calificaciones = Entregas
+                    .Where(x => x.Repartidor != null && x.Repartidor.Id == e.Repartidor.Id && x.Calificacion.HasValue)
+                    .Select(x => x.Calificacion.Value)
+                    .ToList();
+
+                e.Repartidor.CalificacionPromedio = calificaciones.Any() ? Math.Round(calificaciones.Average(), 2) : 0;
+            }
+
+            try { Save(); } catch { }
+            message = null;
+            return true;
+        }
+
         public static void Save()
         {
             try
@@ -449,7 +480,6 @@ namespace Proyecto_Go_Xela
                     Entregas = Entregas.ToList()
                 };
 
-                // Serializar usando Newtonsoft.Json cargado en tiempo de ejecución (evita referencia en tiempo de compilación)
                 var dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Newtonsoft.Json.dll");
                 if (!File.Exists(dllPath)) dllPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "lib", "Newtonsoft.Json.dll");
                 if (File.Exists(dllPath))
@@ -464,12 +494,10 @@ namespace Proyecto_Go_Xela
                 }
                 else
                 {
-                    // Fallback simple: no persistir si no se encuentra la DLL
                 }
             }
             catch
             {
-                // No lanzar excepciones en save para no romper la app; podría loggearse
             }
         }
 
@@ -501,7 +529,6 @@ namespace Proyecto_Go_Xela
                 if (obj.Vehiculos != null) Vehiculos.AddRange(obj.Vehiculos);
                 if (obj.Entregas != null) Entregas.AddRange(obj.Entregas);
 
-                // restaurar contadores
                 _clienteId = Clientes.Any() ? Clientes.Max(x => x.Id) + 1 : 1;
                 _repartidorId = Repartidores.Any() ? Repartidores.Max(x => x.Id) + 1 : 1;
                 _paqueteId = Paquetes.Any() ? Paquetes.Max(x => x.Id) + 1 : 1;
@@ -510,11 +537,10 @@ namespace Proyecto_Go_Xela
             }
             catch
             {
-                // Ignorar errores de carga
+
             }
         }
 
-        // Borra los datos en memoria y el archivo persistente
         public static void ResetData()
         {
             try
@@ -531,17 +557,15 @@ namespace Proyecto_Go_Xela
 
                 if (File.Exists(PersistFile))
                 {
-                    try { File.Delete(PersistFile); } catch { /* ignorar errores de borrado */ }
+                    try { File.Delete(PersistFile); } catch { }
                 }
             }
             catch
             {
-                // Ignorar errores aquí para no romper la app
             }
         }
     }
 
-    // Servicio de cálculo con reglas estándar
     public static class CostCalculator
     {
         private const double TarifaPorKm = 1.2; // moneda por km
@@ -551,24 +575,20 @@ namespace Proyecto_Go_Xela
         private const double RecargoPesoFactor = 0.10; // 10% si peso > threshold
         private const double DescuentoPreferente = 0.10; // 10% si cliente preferente
 
-        // Estimación simple de distancia: devuelve 5 km por defecto si no se puede estimar.
         public static double EstimateDistanceKm(string origen, string destino)
         {
             if (string.IsNullOrWhiteSpace(origen) || string.IsNullOrWhiteSpace(destino))
                 return 5.0;
-            // Si el usuario introduce algo como "12.34, -56.78" se podría parsear, pero mantenemos heurística simple
-            return 8.0; // valor por defecto razonable
+            return 8.0; 
         }
 
         public static void ApplyCosts(Entrega e)
         {
-            // Tarifa base por km
             e.TarifaBase = Math.Round(TarifaPorKm * e.DistanciaKm, 2);
 
             double recargos = 0.0;
             double descuentos = 0.0;
 
-            // Recargo por tipo de servicio
             if (e.TipoServicio == ServiceType.Urgente)
             {
                 recargos += e.TarifaBase * RecargoUrgenteFactor;
@@ -578,13 +598,11 @@ namespace Proyecto_Go_Xela
                 recargos += e.TarifaBase * RecargoPrioritarioFactor;
             }
 
-            // Recargo por peso del paquete
             if (e.Paquete != null && e.Paquete.PesoKg > RecargoPesoThreshold)
             {
                 recargos += e.TarifaBase * RecargoPesoFactor;
             }
 
-            // Descuento por cliente preferente
             if (e.Cliente != null && e.Cliente.EsPreferente)
             {
                 descuentos += e.TarifaBase * DescuentoPreferente;

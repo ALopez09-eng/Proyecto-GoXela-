@@ -15,7 +15,6 @@ namespace Proyecto_Go_Xela
         private const string ESTADO_INICIAL = "EN CAMINO";
         private const string PLACEHOLDER = "SELECCIONE UNA OPCIÓN";
 
-        // Id del paquete seleccionado en el ListView para edición. -1 = modo "Registrar".
         private int _idPaqueteEnEdicion = -1;
 
         public GestionPaquetes()
@@ -35,12 +34,8 @@ namespace Proyecto_Go_Xela
 
         private void GestionPaquetes_Load(object sender, EventArgs e)
         {
-            // "registrarRepartidor", "CancelarPaquete" y "ActualizarRepartidor" ya están conectados
-            // desde el Designer a registrarRepartidor_Click, CancelarPaquete_Click y ActualizarRepartidor_Click.
             ActualizarRepartidor.Enabled = false;
 
-            // Cargar paquetes existentes en el ListView (Paquete.Estado ya es un string, así que
-            // aquí no hay pérdida de información al recargar, a diferencia de otros formularios).
             foreach (var p in InMemoryStore.GetPaquetes())
             {
                 var item = CrearItemPaquete(p.Id, p.Descripcion, p.PesoKg, p.ValorDeclarado,
@@ -49,10 +44,7 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // ---------- Helpers ----------
 
-        // Columnas reales del ListView (por índice, no por DisplayIndex):
-        // 0 Codigo, 1 Descripcion, 2 Peso, 3 ValorDeclarado, 4 DireccionOrigen, 5 DireccionDestino, 6 TipoPaquete, 7 Estado
         private ListViewItem CrearItemPaquete(int id, string descripcion, double peso, double valorDeclarado,
             string direccionOrigen, string direccionDestino, string tipo, string estado)
         {
@@ -79,7 +71,6 @@ namespace Proyecto_Go_Xela
             DescripciónPaquete.Focus();
         }
 
-        // Botón "REGISTRAR" (ya conectado en el Designer)
         private void registrarRepartidor_Click(object sender, EventArgs e)
         {
             try
@@ -91,8 +82,6 @@ namespace Proyecto_Go_Xela
                 string direccionDestino = DireccionDestinoPaquete.Text?.Trim();
                 string tipoTexto = TipoPaquete.Text?.Trim();
 
-                // 1) Todos los campos son obligatorios (el Estado NO se exige aquí: siempre
-                // se fuerza a "EN CAMINO" al registrar, sin importar lo que tenga el combo)
                 if (string.IsNullOrEmpty(descripcion) || string.IsNullOrEmpty(pesoTexto) ||
                     string.IsNullOrEmpty(valorTexto) || string.IsNullOrEmpty(direccionOrigen) ||
                     string.IsNullOrEmpty(direccionDestino) ||
@@ -103,7 +92,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 2) Peso y valor declarado positivos y mayores a 0
                 if (!double.TryParse(pesoTexto, out double peso) || peso <= 0)
                 {
                     MessageBox.Show("El peso debe ser un número positivo mayor a 0.",
@@ -120,7 +108,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 3) Dirección de origen y destino no pueden ser iguales
                 if (direccionOrigen.Equals(direccionDestino, StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("La dirección de origen y destino no pueden ser iguales.",
@@ -137,14 +124,13 @@ namespace Proyecto_Go_Xela
                     DireccionOrigen = direccionOrigen,
                     DireccionDestino = direccionDestino,
                     ValorDeclarado = valorDeclarado,
-                    Estado = ESTADO_INICIAL, // 4) Siempre inicia "EN CAMINO", sin importar el combo de Estado
+                    Estado = ESTADO_INICIAL, 
                     Tipo = PackageType.Normal
                 };
                 try { if (Enum.TryParse<PackageType>(tipoTexto, true, out var t)) p.Tipo = t; } catch { }
 
                 p = InMemoryStore.AddPaquete(p);
 
-                // 5) Mostrar en el ListView
                 var item = CrearItemPaquete(p.Id, p.Descripcion, p.PesoKg, p.ValorDeclarado,
                     direccionOrigen, direccionDestino, tipoTexto.ToUpper(), ESTADO_INICIAL);
                 IvRegistroPaquetes.Items.Add(item);
@@ -192,7 +178,6 @@ namespace Proyecto_Go_Xela
 
         }
 
-        // Botón "CANCELAR" (ya conectado en el Designer). Deja el GroupBox limpio y vuelve al modo "Registrar".
         private void CancelarPaquete_Click(object sender, EventArgs e)
         {
             LimpiarCamposPaquete();
@@ -202,8 +187,6 @@ namespace Proyecto_Go_Xela
             ActualizarRepartidor.Enabled = false;
         }
 
-        // Botón "ACTUALIZAR" (ya conectado en el Designer).
-        // Valida, actualiza el paquete en InMemoryStore y refleja los cambios en el ListView.
         private void ActualizarRepartidor_Click(object sender, EventArgs e)
         {
             try
@@ -273,10 +256,8 @@ namespace Proyecto_Go_Xela
                 paquete.DireccionDestino = direccionDestino;
                 try { if (Enum.TryParse<PackageType>(tipoTexto, true, out var t)) paquete.Tipo = t; } catch { }
 
-                // 4) En edición sí se permite cambiar el estado según lo seleccionado en el combo
                 paquete.Estado = estadoTexto;
 
-                // Reflejar los cambios en la fila del ListView
                 foreach (ListViewItem item in IvRegistroPaquetes.Items)
                 {
                     if (item.Text == _idPaqueteEnEdicion.ToString())
@@ -307,7 +288,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // 5) Al seleccionar una fila, cargar sus datos en el GroupBox y pasar a modo edición
         private void IvRegistroPaquetes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (IvRegistroPaquetes.SelectedItems.Count == 0)
@@ -326,9 +306,8 @@ namespace Proyecto_Go_Xela
             DireccionOrigenPaquete.Text = item.SubItems[4].Text;
             DireccionDestinoPaquete.Text = item.SubItems[5].Text;
             TipoPaquete.Text = item.SubItems[6].Text;
-            EstadoPaquete.Text = item.SubItems[7].Text; // 4) En edición sí se puede ver/cambiar el estado
+            EstadoPaquete.Text = item.SubItems[7].Text;
 
-            // Bloquear Registrar y habilitar Cancelar/Actualizar (modo edición)
             registrarRepartidor.Enabled = false;
             ActualizarRepartidor.Enabled = true;
         }

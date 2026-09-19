@@ -17,14 +17,14 @@ namespace Proyecto_Go_Xela
             InitializeComponent();
             this.CenterToScreen();
 
-            // Añadir botón dinámico para abrir la ventana de reportes
+
             try
             {
                 var btnReports = new Button();
                 btnReports.Name = "btnReports";
                 btnReports.Text = "Reportes";
                 btnReports.Width = 100;
-                // Posicionar en la parte superior derecha teniendo en cuenta el tamaño del formulario
+
                 btnReports.Left = Math.Max(10, this.ClientSize.Width - btnReports.Width - 10);
                 btnReports.Top = 10;
                 btnReports.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -32,14 +32,25 @@ namespace Proyecto_Go_Xela
                     try { new ReportsForm().Show(); } catch { }
                 };
                 this.Controls.Add(btnReports);
+
+                var btnIncidencias = new Button();
+                btnIncidencias.Name = "btnIncidencias";
+                btnIncidencias.Text = "Incidencias";
+                btnIncidencias.Width = 100;
+                btnIncidencias.Left = Math.Max(10, btnReports.Left - btnIncidencias.Width - 10);
+                btnIncidencias.Top = 10;
+                btnIncidencias.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                btnIncidencias.Click += (s, e) => {
+                    try { new GestionIncidencias().Show(); } catch { }
+                };
+                this.Controls.Add(btnIncidencias);
             }
             catch
             {
-                // ignorar si no se puede crear el control dinámicamente
+
             }
         }
 
-        // Simple prompt dialog para pedir texto al usuario
         private string Prompt(string title, string prompt)
         {
             using (var form = new Form())
@@ -68,8 +79,6 @@ namespace Proyecto_Go_Xela
 
         private void Inicio_Load(object sender, EventArgs e)
         {
-            /*La leyenda cuenta que el lethercaacers*/
-            // Asegurar que los botones añadidos por código estén visibles en tiempo de ejecución
             try
             {
                 if (this.btnOpenDetalle != null)
@@ -85,7 +94,7 @@ namespace Proyecto_Go_Xela
             }
             catch
             {
-                // ignorar
+                
             }
         }
 

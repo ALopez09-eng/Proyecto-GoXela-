@@ -6,11 +6,14 @@ using System.Windows.Forms;
 
 namespace Proyecto_Go_Xela
 {
+
+    [System.ComponentModel.DesignerCategory("Code")]
     public class DetalleEntrega : Form
     {
         private Entrega _entrega;
         private Label lblCliente, lblPaquete, lblRepartidor, lblVehiculo, lblOrigen, lblDestino, lblDistancia, lblFechaSolicitud;
         private ComboBox cbEstado;
+        private ComboBox cbCalificacion;
         private ListBox lbIncidencias;
         private TextBox txtNuevaIncidencia;
         private Button btnAddIncidencia, btnGuardar, btnCancelar;
@@ -19,6 +22,10 @@ namespace Proyecto_Go_Xela
         {
             _entrega = entrega ?? throw new ArgumentNullException(nameof(entrega));
             InitializeComponent();
+
+            cbEstado.SelectedIndexChanged += CbEstado_SelectedIndexChanged;
+            btnCancelar.Click += BtnCancelar_Click;
+
             LoadData();
         }
 
@@ -31,7 +38,7 @@ namespace Proyecto_Go_Xela
         private void InitializeComponent()
         {
             this.Text = "Detalle de entrega";
-            this.Size = new Size(600, 520);
+            this.Size = new Size(600, 600);
             this.StartPosition = FormStartPosition.CenterParent;
 
             lblCliente = new Label() { Left = 10, Top = 10, Width = 560 };
@@ -45,6 +52,10 @@ namespace Proyecto_Go_Xela
 
             var lblEstado = new Label() { Left = 10, Top = 215, Width = 120, Text = "Estado:" };
             cbEstado = new ComboBox() { Left = 140, Top = 210, Width = 200, DropDownStyle = ComboBoxStyle.DropDownList };
+
+            var lblCalificacion = new Label() { Left = 355, Top = 215, Width = 95, Text = "Calificación:" };
+            cbCalificacion = new ComboBox() { Left = 455, Top = 210, Width = 60, DropDownStyle = ComboBoxStyle.DropDownList };
+            cbCalificacion.Items.AddRange(new object[] { "1", "2", "3", "4", "5" });
 
             var lblInc = new Label() { Left = 10, Top = 320, Width = 200, Text = "Incidencias:" };
             lbIncidencias = new ListBox() { Left = 10, Top = 380, Width = 560, Height = 100 };
@@ -63,10 +74,9 @@ namespace Proyecto_Go_Xela
             btnAddIncidencia = new Button() { Left = 450, Top = 486, Width = 120, Text = "Añadir" };
             btnAddIncidencia.Click += BtnAddIncidencia_Click;
 
-            btnGuardar = new Button() { Left = 310, Top = 455, Width = 120, Text = "Guardar" };
-            btnCancelar = new Button() { Left = 440, Top = 455, Width = 120, Text = "Cancelar" };
+            btnGuardar = new Button() { Left = 310, Top = 525, Width = 120, Text = "Guardar" };
+            btnCancelar = new Button() { Left = 440, Top = 525, Width = 120, Text = "Cancelar" };
             btnGuardar.Click += BtnGuardar_Click;
-            btnCancelar.Click += (s, e) => { this.DialogResult = DialogResult.Cancel; this.Close(); };
 
             this.Controls.Add(lblCliente);
             this.Controls.Add(lblPaquete);
@@ -78,6 +88,8 @@ namespace Proyecto_Go_Xela
             this.Controls.Add(lblFechaSolicitud);
             this.Controls.Add(lblEstado);
             this.Controls.Add(cbEstado);
+            this.Controls.Add(lblCalificacion);
+            this.Controls.Add(cbCalificacion);
             this.Controls.Add(lblHist);
             this.Controls.Add(lbHistorial);
             this.Controls.Add(lblInc);
@@ -92,6 +104,18 @@ namespace Proyecto_Go_Xela
             this.Controls.Add(btnCancelar);
         }
 
+        private void CbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cbCalificacion.Enabled = cbEstado.SelectedItem != null &&
+                cbEstado.SelectedItem.ToString() == DeliveryStatus.Entregada.ToString();
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
         private void LoadData()
         {
             lblCliente.Text = "Cliente: " + (_entrega.Cliente?.Nombre ?? "-");
@@ -103,7 +127,6 @@ namespace Proyecto_Go_Xela
             lblDistancia.Text = "Distancia estimada (km): " + _entrega.DistanciaKm.ToString("F2");
             lblFechaSolicitud.Text = "Fecha de solicitud: " + _entrega.FechaSolicitud.ToString("g");
 
-            // Popular combobox con transiciones válidas desde el estado actual (incluye estado actual)
             cbEstado.Items.Clear();
             cbEstado.Items.Add(_entrega.Estado.ToString());
             var allowed = InMemoryStore.GetAllowedTransitions(_entrega.Estado);
@@ -113,7 +136,13 @@ namespace Proyecto_Go_Xela
             }
             cbEstado.SelectedItem = _entrega.Estado.ToString();
 
-            // historial
+            bool esEntregada = _entrega.Estado == DeliveryStatus.Entregada;
+            cbCalificacion.Enabled = esEntregada;
+            cbCalificacion.SelectedItem = _entrega.Calificacion.HasValue ? _entrega.Calificacion.Value.ToString() : null;
+            bool esFinal = _entrega.Estado == DeliveryStatus.Entregada || _entrega.Estado == DeliveryStatus.Cancelada;
+            btnAddIncidencia.Enabled = !esFinal;
+            txtNuevaIncidencia.Enabled = !esFinal;
+
             var histControl = this.Controls.Find("lbHistorial", true).FirstOrDefault() as ListBox;
             if (histControl != null)
             {
@@ -133,7 +162,6 @@ namespace Proyecto_Go_Xela
                 foreach (var inc in _entrega.Incidencias)
                     lbIncidencias.Items.Add(FormatIncidencia(inc));
             }
-            // establecer valores por defecto para nuevo registro
             var cbTipo = this.Controls.Find("cbTipoIncidencia", true).FirstOrDefault() as ComboBox;
             var txtAcc = this.Controls.Find("txtAccion", true).FirstOrDefault() as TextBox;
             if (cbTipo != null) cbTipo.SelectedIndex = 0;
@@ -142,6 +170,13 @@ namespace Proyecto_Go_Xela
 
         private void BtnAddIncidencia_Click(object sender, EventArgs e)
         {
+            if (_entrega.Estado == DeliveryStatus.Entregada || _entrega.Estado == DeliveryStatus.Cancelada)
+            {
+                MessageBox.Show("No se pueden agregar incidencias a una entrega ya finalizada o cancelada.",
+                    "Acción no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             var desc = txtNuevaIncidencia.Text?.Trim();
             if (string.IsNullOrEmpty(desc)) return;
 
@@ -175,12 +210,10 @@ namespace Proyecto_Go_Xela
 
         private void BtnGuardar_Click(object sender, EventArgs e)
         {
-            // actualizar estado
             if (cbEstado.SelectedItem != null)
             {
                 if (Enum.TryParse<DeliveryStatus>(cbEstado.SelectedItem.ToString(), out var st))
                 {
-                    // Intentar cambiar mediante el store para validar la transición
                     if (!InMemoryStore.TryChangeEntregaState(_entrega.Id, st, Environment.UserName, out var msg))
                     {
                         MessageBox.Show(msg ?? "Transición inválida.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -189,9 +222,16 @@ namespace Proyecto_Go_Xela
                 }
             }
 
-            // las incidencias ya se agregaron como objetos en _entrega.Incidencias
+            if (cbCalificacion.Enabled && cbCalificacion.SelectedItem != null &&
+                int.TryParse(cbCalificacion.SelectedItem.ToString(), out int calificacion))
+            {
+                if (!InMemoryStore.CalificarEntrega(_entrega.Id, calificacion, out var califMsg))
+                {
+                    MessageBox.Show(califMsg ?? "No se pudo registrar la calificación.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
-            // guardar cambios en store (Save opcional)
             InMemoryStore.Save();
 
             this.DialogResult = DialogResult.OK;

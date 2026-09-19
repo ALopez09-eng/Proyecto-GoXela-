@@ -49,9 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concepts.cs" />
-    <Compile Include="DetalleEntrega.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="DetalleEntrega.cs" />
     <Compile Include="GestionClientes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -59,6 +57,9 @@
       <DependentUpon>GestionClientes.cs</DependentUpon>
     </Compile>
     <Compile Include="GestionEntregas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GestionIncidencias.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GestionEntregas.Designer.cs">
@@ -95,6 +96,9 @@
     </Compile>
     <Compile Include="Services\IReportsService.cs" />
     <Compile Include="Services\ReportsService.cs" />
+    <EmbeddedResource Include="DetalleEntrega.resx">
+      <DependentUpon>DetalleEntrega.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GestionClientes.resx">
       <DependentUpon>GestionClientes.cs</DependentUpon>
     </EmbeddedResource>

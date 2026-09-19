@@ -15,7 +15,6 @@ namespace Proyecto_Go_Xela
         private const string ESTADO_INICIAL = "DISPONIBLE";
         private const string PLACEHOLDER = "SELECCIONE UNA OPCIÓN";
 
-        // Id del repartidor seleccionado en el ListView para edición. -1 = modo "Registrar".
         private int _idRepartidorEnEdicion = -1;
 
         public GestionRepartidores()
@@ -53,7 +52,6 @@ namespace Proyecto_Go_Xela
 
         }
 
-        // 2) Si el tipo de licencia es "N/A", bloquear el número de licencia con "N/A"; en cualquier otro caso, habilitarlo.
         private void TipoLicencia_SelectedIndexChanged(object sender, EventArgs e)
         {
             bool esNA = (TipoLicencia.Text ?? "").Trim().Equals("N/A", StringComparison.OrdinalIgnoreCase);
@@ -65,7 +63,6 @@ namespace Proyecto_Go_Xela
             }
             else
             {
-                // Si venía bloqueado con "N/A", lo limpiamos para que el usuario escriba el número real
                 if (!NumeroLicencia.Enabled)
                 {
                     NumeroLicencia.Text = "";
@@ -81,42 +78,33 @@ namespace Proyecto_Go_Xela
 
         private void GestionRepartidores_Load(object sender, EventArgs e)
         {
-            // Asociar evento del botón Registrar.
-            // "button1" (Cancelar) y "ActualizarRepartidor" (Actualizar) ya están conectados desde
-            // el Designer a button1_Click y button2_Click, así que solo llenamos sus cuerpos más abajo.
+
             registrarRepartidor.Click += RegistrarRepartidor_Click;
 
             ActualizarRepartidor.Enabled = false;
 
-            // Cargar repartidores existentes en el ListView.
-            // NOTA: Repartidor no guarda el número de licencia (solo el tipo en "Licencias"),
-            // así que ese campo queda vacío al recargar desde el almacenamiento (ver aviso al final).
             foreach (var r in InMemoryStore.GetRepartidores())
             {
                 string tipoLicenciaGuardado = (r.Licencias != null && r.Licencias.Count > 0) ? r.Licencias[0] : "";
                 string estadoGuardado = r.Disponible ? "DISPONIBLE" : "ASIGNADO";
 
-                var item = CrearItemRepartidor(r.Id, r.Nombre, r.Telefono, tipoLicenciaGuardado, "", "0", "0", estadoGuardado);
+                var item = CrearItemRepartidor(r.Id, r.Nombre, r.Telefono, tipoLicenciaGuardado,
+                    r.NumeroLicencia ?? "", r.CantidadEntregasRealizadas.ToString(), r.CalificacionPromedio.ToString("F2"), estadoGuardado);
                 IvRegistroReparidores.Items.Add(item);
             }
         }
 
-        // ---------- Helpers ----------
 
-        // 1) Teléfono positivo con exactamente 8 dígitos.
         private bool ValidarTelefono(string telefono)
         {
             return !string.IsNullOrEmpty(telefono) && telefono.Length == 8 && telefono.All(char.IsDigit);
         }
 
-        // Número de licencia: exactamente 13 dígitos, ni más ni menos, sin signo negativo.
         private bool ValidarNumeroLicencia(string numero)
         {
             return !string.IsNullOrEmpty(numero) && numero.Length == 13 && numero.All(char.IsDigit);
         }
 
-        // Columnas reales del ListView (según el Designer, por orden de índice -no de DisplayIndex-):
-        // 0 Codigo, 1 Nombre, 2 Telefono, 3 TipoLicencia, 4 NumeroLicencia, 5 CantidadEntregas, 6 CalificacionPromedio, 7 Estado
         private ListViewItem CrearItemRepartidor(int id, string nombre, string telefono, string tipoLicencia,
             string numeroLicencia, string entregas, string calificacion, string estado)
         {
@@ -154,7 +142,6 @@ namespace Proyecto_Go_Xela
                 bool esNA = !string.IsNullOrEmpty(tipoLicencia) &&
                     tipoLicencia.Equals("N/A", StringComparison.OrdinalIgnoreCase);
 
-                // Todos los campos son obligatorios
                 if (string.IsNullOrEmpty(nombre) || string.IsNullOrEmpty(telefono) ||
                     string.IsNullOrEmpty(tipoLicencia) || tipoLicencia.Equals(PLACEHOLDER, StringComparison.OrdinalIgnoreCase) ||
                     string.IsNullOrEmpty(numeroLicencia))
@@ -164,7 +151,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // 1) Teléfono positivo, exactamente 8 dígitos
                 if (!ValidarTelefono(telefono))
                 {
                     MessageBox.Show("El número de teléfono debe contener exactamente 8 dígitos y no puede ser negativo.",
@@ -173,7 +159,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // Número de licencia: exactamente 13 dígitos, sin signo negativo (no aplica si es "N/A")
                 if (!esNA && !ValidarNumeroLicencia(numeroLicencia))
                 {
                     MessageBox.Show("El número de licencia debe contener exactamente 13 dígitos y no puede ser negativo.",
@@ -188,17 +173,15 @@ namespace Proyecto_Go_Xela
                     Telefono = telefono
                 };
 
-                // 3) Siempre inicia DISPONIBLE, sin importar lo que tenga seleccionado el combo de Estado
                 r.Disponible = true;
                 r.Licencias = new List<string> { tipoLicencia };
+                r.NumeroLicencia = esNA ? "N/A" : numeroLicencia;
                 r = InMemoryStore.AddRepartidor(r);
 
-                // 5) Mostrar en el ListView
                 var item = CrearItemRepartidor(r.Id, r.Nombre, r.Telefono, tipoLicencia,
-                    esNA ? "N/A" : numeroLicencia, "0", "0", ESTADO_INICIAL);
+                    r.NumeroLicencia, r.CantidadEntregasRealizadas.ToString(), r.CalificacionPromedio.ToString("F2"), ESTADO_INICIAL);
                 IvRegistroReparidores.Items.Add(item);
 
-                // 4) Limpiar el formulario para poder registrar otro repartidor
                 LimpiarCamposRepartidor();
             }
             catch (Exception ex)
@@ -207,7 +190,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // Botón "CANCELAR" (ya conectado en el Designer). Deja el GroupBox limpio y vuelve al modo "Registrar".
         private void button1_Click(object sender, EventArgs e)
         {
             LimpiarCamposRepartidor();
@@ -217,8 +199,6 @@ namespace Proyecto_Go_Xela
             ActualizarRepartidor.Enabled = false;
         }
 
-        // Botón "ACTUALIZAR" (control ActualizarRepartidor, ya conectado en el Designer a este método).
-        // Valida, actualiza el repartidor en InMemoryStore y refleja los cambios en el ListView.
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -257,7 +237,6 @@ namespace Proyecto_Go_Xela
                     return;
                 }
 
-                // Número de licencia: exactamente 13 dígitos, sin signo negativo (no aplica si es "N/A")
                 if (!esNA && !ValidarNumeroLicencia(numeroLicencia))
                 {
                     MessageBox.Show("El número de licencia debe contener exactamente 13 dígitos y no puede ser negativo.",
@@ -277,11 +256,10 @@ namespace Proyecto_Go_Xela
                 repartidor.Nombre = nombre;
                 repartidor.Telefono = telefono;
                 repartidor.Licencias = new List<string> { tipoLicencia };
+                repartidor.NumeroLicencia = esNA ? "N/A" : numeroLicencia;
 
-                // 3) En edición sí se permite cambiar el estado según lo seleccionado en el combo
                 repartidor.Disponible = estadoTexto.Equals("DISPONIBLE", StringComparison.OrdinalIgnoreCase);
 
-                // Reflejar los cambios en la fila del ListView
                 foreach (ListViewItem item in IvRegistroReparidores.Items)
                 {
                     if (item.Text == _idRepartidorEnEdicion.ToString())
@@ -310,7 +288,6 @@ namespace Proyecto_Go_Xela
             }
         }
 
-        // 5) Al seleccionar una fila, cargar sus datos en el GroupBox y pasar a modo edición
         private void IvRegistroReparidores_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (IvRegistroReparidores.SelectedItems.Count == 0)
@@ -332,10 +309,8 @@ namespace Proyecto_Go_Xela
             NombreRepartidor.Text = nombreGuardado;
             NumeroTelefonoRepartidor.Text = telefonoGuardado;
             TipoLicencia.Text = tipoLicenciaGuardado;
-            EstadoDisponibilidad.Text = estadoGuardado; // 3) En edición sí se puede ver/cambiar el estado
+            EstadoDisponibilidad.Text = estadoGuardado; 
 
-            // 2) Forzar el estado correcto del número de licencia según el tipo real
-            // (al asignar Text por código, el combo no siempre dispara SelectedIndexChanged)
             bool esNA = tipoLicenciaGuardado.Trim().Equals("N/A", StringComparison.OrdinalIgnoreCase);
             if (esNA)
             {
@@ -348,7 +323,6 @@ namespace Proyecto_Go_Xela
                 NumeroLicencia.Text = numeroLicenciaGuardado;
             }
 
-            // Bloquear Registrar y habilitar Cancelar/Actualizar (modo edición)
             registrarRepartidor.Enabled = false;
             ActualizarRepartidor.Enabled = true;
         }
